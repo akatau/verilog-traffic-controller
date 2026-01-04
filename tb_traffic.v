@@ -16,6 +16,8 @@ module tb_traffic;
         .KEY(reset_n),
         .LED_N(led_n),
         .LED_E(led_e),
+        .HEX0(h0),
+        .HEX1(h1)
     );
 
     // make simulation faster

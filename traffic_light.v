@@ -3,6 +3,8 @@ module traffic_light ( input CLOCK_50,
                      input [0:0] KEY, // reset is key0
                      output reg [2:0] LED_N, // lights for north
                      output reg [2:0] LED_E, // lights for east
+                     output [6:0] HEX0,
+                     output [6:0] HEX1
 );
 
     reg [1:0] state; // 0=N_Grn, 1=Yel, 2=E_Grn, 3=Yel2
@@ -101,4 +103,39 @@ module traffic_light ( input CLOCK_50,
         end
     end
 
+    // Display logic
+    wire [3:0] ones;
+    wire [3:0] tens;
+    
+    // simple math for digits
+    assign ones = timer_sec % 10;
+    assign tens = timer_sec / 10;
+
+    // instantiate hex decoders
+    HexDecoder h0(ones, HEX0);
+    HexDecoder h1(tens, HEX1);
+
+endmodule
+
+// Helper module for 7 segment—I used an LLM for this submodule tbh; too mundane to do from scratch
+module HexDecoder(in, out);
+    input [3:0] in;
+    output reg [6:0] out;
+
+    always @(*) begin
+        // active low
+        case(in)
+            0: out = 7'b1000000;
+            1: out = 7'b1111001;
+            2: out = 7'b0100100;
+            3: out = 7'b0110000;
+            4: out = 7'b0011001;
+            5: out = 7'b0010010; 
+            6: out = 7'b0000010;
+            7: out = 7'b1111000;
+            8: out = 7'b0000000;
+            9: out = 7'b0010000;
+            default: out = 7'b1111111;
+        endcase
+    end
 endmodule
