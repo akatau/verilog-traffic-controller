@@ -25,6 +25,8 @@ module tb_traffic;
     defparam dut.CNT_MAX = 5; 
 
     initial begin
+        $dumpfile("tb_traffic.vcd");
+        $dumpvars(0,tb_traffic);
         clk = 0;
         forever #10 clk = ~clk; // 50mhz ish
     end
